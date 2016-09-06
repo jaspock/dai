@@ -1,2 +1,3 @@
-# dai
-Materiales para Desarrollo de Aplicaciones en Internet
+# DAI
+
+Materiales para la asignatura Desarrollo de Aplicaciones en Internet.
