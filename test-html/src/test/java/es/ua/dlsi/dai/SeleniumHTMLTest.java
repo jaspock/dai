@@ -27,7 +27,7 @@ public class SeleniumHTMLTest {
         driver.get("http://www.ua.es");
         // Espera como máximo 10 segundos a que el elemento esté disponible:
         WebElement element = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#footer1Columna2 > p:first-child > a")));
-        assertEquals(element.getText(),"informacio@ua.es");
+        assertEquals("informacio@ua.es",element.getText());
     }
 
     @AfterClass

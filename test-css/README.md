@@ -1,5 +1,5 @@
 
-# Ejecución de pruebas sobre documentos HTML
+# Ejecución de pruebas sobre estilos CSS
 
 Haz
 
@@ -7,6 +7,6 @@ Haz
 mvn test
 ~~~
 
-para ejecutar las pruebas definidas en *src/test/java*.
+para ejecutar las pruebas definidas en *src/test/java*. Mirar el código del directorio test-js si hay problemas con versiones recientes de Firefox. 
 
 
