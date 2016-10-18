@@ -8,7 +8,7 @@
 
   <servlet>
 	<servlet-name>cart</servlet-name>
-	<servlet-class>CartServlet</servlet-class>
+	<servlet-class>es.ua.dlsi.dai.CartServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
