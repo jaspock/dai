@@ -21,6 +21,7 @@ public class Main {
     JSONParser parser = new JSONParser();
 
 		// Consulta de todas las asignaturas:
+    // curl -i -H "Accept: application/json" -X GET http://localhost:3000/asignaturas/
 		s = Request.Get(base + "asignaturas").execute().returnContent().asString();
 		a = (JSONArray) parser.parse(s);
 		Iterator<?> i = a.iterator();
@@ -44,7 +45,7 @@ public class Main {
 			consultaTodas(base);
 
 			// Consulta por id:
-			// curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/asignaturas/2
+			// curl -i -H "Accept: application/json" -X GET http://localhost:3000/asignaturas/2
 			s = Request.Get(base + "asignaturas/2").addHeader("Accept", "application/json")
 			    .execute().returnContent().asString();
 			System.out.println("---- Consulta por id (JSON retornado):\n" + s);
