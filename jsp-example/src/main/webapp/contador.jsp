@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<!-- Ejemplo de declaración entre <%! %>  -->
 <%!
  private static int counter = 0;
 %>
 
+<!-- Ejemplo de scriptlet entre <% %>  -->
 <%
 request.setAttribute("pageTitle", "Contador");
 request.setAttribute("pageHeading", "Contador de visitas");
@@ -18,7 +20,9 @@ request.setAttribute("pageHeading", "Contador de visitas");
   String visitor = Integer.toString(++counter);
 %>
 
+<!-- Ejemplo de expresión entre <%= %>  -->
 <p>El número de visitas es <%= visitor + "." %></p>
+
 <p>Prueba a recargar la página.</p>
 
 <jsp:include page="footer.jsp"></jsp:include>
