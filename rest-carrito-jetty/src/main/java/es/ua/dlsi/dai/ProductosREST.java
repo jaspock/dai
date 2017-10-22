@@ -12,6 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import javax.ws.rs.NotFoundException;
+
 @Path("productos")
 public class ProductosREST {
 
@@ -20,7 +22,7 @@ public class ProductosREST {
     	carrito.add(new Producto("galletas",2));
     	carrito.add(new Producto("tomates",12));
     }
-	
+
     @GET
     @Path("{id}")
     @Produces("application/json")
@@ -30,15 +32,15 @@ public class ProductosREST {
     			return carrito.get(i);
     		}
     	}
-    	return null;
+    	throw new NotFoundException();
     }
-    
+
     @GET
     @Produces("application/json")
     public List<Producto> getProducto() {
         return carrito;
     }
-    
+
     @DELETE
     @Path("{id}")
     @Produces("application/json")
@@ -50,23 +52,25 @@ public class ProductosREST {
     			return p;
     		}
     	}
-    	return null;
+    	throw new NotFoundException();
     }
-    
-    @POST 
+
+    @POST
     @Consumes("application/json")
     @Produces("application/json")
     public Producto postProducto(Producto p) {
     	for (int i=0;i<carrito.size();i++) {
     		if(carrito.get(i).getNombre().equals(p.getNombre())) {
+          /* TODO: return ConflictException as described here:
+             https://zcox.wordpress.com/2009/06/22/use-exceptions-to-send-error-responses-in-jersey/ */
     			return null;
     		}
     	}
     	carrito.add(p);
     	return p;
     }
-    
-    @PUT 
+
+    @PUT
     @Consumes("application/json")
     @Produces("application/json")
     public Producto putProducto(Producto p) {
@@ -76,7 +80,7 @@ public class ProductosREST {
     			return p;
     		}
     	}
-    	return null;
+    	throw new NotFoundException();
     }
-    
+
 }
