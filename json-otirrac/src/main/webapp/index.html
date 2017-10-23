@@ -6,54 +6,52 @@
 </head>
 <body>
   <h2>Búsqueda de productos</h2>
-  <form method="get" action="/search">
-    <label>Producto:</label>
-    <!-- <<< <input type="text" name="q" placeholder="pon aquí el nombre del producto" autofocus required> -->
-    <!-- <<< <input type="submit" value="Busca" id="search"> -->
-    <!-- >>> -->
-    <input type="text" id="q" placeholder="pon aquí el nombre del producto" autofocus required>
-    <input type="button" value="Busca" id="search">
-    <!-- >>> -->
-  </form>
 
-<!-- >>> -->
-  <div id="results"></div>
+    <form id="formulario">
+      <label>Producto:</label>
+      <input type="text" id="q" placeholder="pon aquí el nombre del producto" autofocus required>
+      <button type="submit" id="search">Busca</button>
+    </form>
+
+    <div id="results"></div>
 
 <script>
- function doRequest () {
-  var client = new XMLHttpRequest();
-  var url= "search?q="+document.querySelector("#q").value;
-  client.open("GET", url, true);
-  client.onreadystatechange = function () {
-    console.log(client.readyState);
-    if (client.readyState == 4) {
-        if (client.status != 200)
-          console.error("The request was not completed successfully (" + client.status + ")!");
-        else {
-          var r= JSON.parse(client.responseText);
-          console.log("Respuesta del servidor: "+client.responseText);
-          var output;
-          if ("error" in r) {
-            output= r.error;
-          } else {
-            output= "<ul>";
-            for (var i=0; i < r.result.length; i++) {
-              output+= "<li>"+r.result[i].product+":"+r.result[i].quantity+"</li>";
-            }
-            output+="</ul>";
-          }
-          document.querySelector("#results").innerHTML= output;
+function doRequest (e) {
+  e.preventDefault(); // evita la acción por defecto (enviar el formulario)
+  fetch('search?q='+document.querySelector("#q").value)
+    .then(function(response) {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response.json();
+    })
+    .then(function(responseAsJson) {
+      var output;
+      if ("error" in responseAsJson) {
+        output= responseAsJson.error;
+      } else {
+        output= "<ul>";
+        for (var i=0; i < responseAsJson.result.length; i++) {
+          output+= "<li>"+responseAsJson.result[i].product+":"+responseAsJson.result[i].quantity+"</li>";
         }
-    }
-  };
-  client.send(null);
- }
+        output+="</ul>";
+      }
+      document.querySelector("#results").innerHTML= output;
+      document.querySelector("#q").value= "";
+    })
+    .catch(function(error) {
+      console.log('Ha habido un problema: \n', error);
+    });
 
- window.onload= function () {
-   document.querySelector("#search").addEventListener("click",doRequest,false);
+}
+
+// Capturamos el evento 'submit' sobre el formulario en lugar de 'click' sobre el botón
+// para que el formulario sea accesible y pueda usarse la tecla enter también para
+// validar.
+window.onload= function () {
+   document.querySelector("#formulario").addEventListener("submit",doRequest,false);
  }
 </script>
-<!-- >>> -->
 
 </body>
 </html>

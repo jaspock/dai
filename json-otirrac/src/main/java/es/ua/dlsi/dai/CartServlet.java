@@ -63,7 +63,7 @@ public class CartServlet extends HttpServlet {
             con= connectToDatabase();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            error= error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+            error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
             // <<< output = "<p>¡Error en la base de datos!</p>";
 						// >>>
 						output = "{\"error\": \"error en la base de datos\"}";
