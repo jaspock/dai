@@ -1,93 +1,121 @@
 package es.ua.dlsi.rest;
 
-import java.io.IOException;
-import java.util.Iterator;
-
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class Main {
 
-	public static void consultaTodas(String base)
-			throws ClientProtocolException, IOException, ParseException {
-		JSONObject j;
-		JSONArray a;
-		String s;
-    JSONParser parser = new JSONParser();
+	private static final String REST_URI = "http://localhost:3000/";
+
+  private static Client client = ClientBuilder.newClient();
+
+  static class Asignatura {
+		private int creditos;
+		private int id;
+		private String codigo;
+		private String nombre;
+		private String descripcion;
+
+		public int getCreditos() {return creditos;}
+		public void setCreditos(int creditos) {this.creditos= creditos;}
+		public int getId() {return id;}
+		public void setId(int id) {this.id= id;}
+		public String getCodigo() {return codigo;}
+		public void setCodigo(String codigo) {this.codigo= codigo;}
+		public String getNombre() {return nombre;}
+		public void setNombre(String nombre) {this.nombre= nombre;}
+		public String getDescripcion() {return descripcion;}
+		public void setDescripcion(String codigo) {this.descripcion= descripcion;}
+	}
+
+	private static void consultaTodas() {
 
 		// Consulta de todas las asignaturas:
     // curl -i -H "Accept: application/json" -X GET http://localhost:3000/asignaturas/
-		s = Request.Get(base + "asignaturas").execute().returnContent().asString();
-		a = (JSONArray) parser.parse(s);
-		Iterator<?> i = a.iterator();
-		System.out.print("---- Consulta de todas las asignaturas (códigos y nombres):");
-		while (i.hasNext()) {
-			j = (JSONObject) i.next();
-			System.out.print(" " + j.get("código") + " (" + j.get("nombre") + ")");
+		Asignatura[] all= client.target(REST_URI)
+			  						  			.path("asignaturas")
+				  								  .request(MediaType.APPLICATION_JSON)
+					  							  .get()
+														.readEntity(Asignatura[].class);
+						  							// Person[] persons = response.readEntity(Person[].class);
+		System.out.println("---- Consulta de todas las asignaturas (códigos y nombres):");
+		for (Asignatura a:all) {
+			System.out.println("    " + a.getCodigo() + " (" + a.getNombre() + ")");
 		}
-		System.out.println("\n---- Consulta de todas las asignaturas (JSON retornado):\n"+s);
 	}
 
 
 	public static void main(String[] args) {
-		String base = "http://localhost:3000/";
-		JSONObject j;
-		String s;
-		JSONParser parser = new JSONParser();
 
-		try {
-
-			consultaTodas(base);
+			consultaTodas();
 
 			// Consulta por id:
 			// curl -i -H "Accept: application/json" -X GET http://localhost:3000/asignaturas/2
-			s = Request.Get(base + "asignaturas/2").addHeader("Accept", "application/json")
-			    .execute().returnContent().asString();
-			System.out.println("---- Consulta por id (JSON retornado):\n" + s);
+			String s1= client.target(REST_URI)
+			                 .path("asignaturas/2")
+			                 .request(MediaType.APPLICATION_JSON)
+			                 .get(String.class);
+			System.out.println("---- Consulta por id (JSON devuelto):\n" + s1);
+
+      // Otra forma:
+			Asignatura a1= client.target(REST_URI)
+													 .path("asignaturas/2")
+													 .request(MediaType.APPLICATION_JSON)
+													 .get(Asignatura.class);
+			System.out.println("---- Consulta por id:\n" + a1.getNombre());
 
 			// Búsqueda compuesta:
-			s = Request.Get(base + "asignaturas?créditos=6&código=34066").execute().returnContent().asString();
-			System.out.println("---- Búsqueda compuesta (JSON retornado):\n" + s);
+			Asignatura[] a2= client.target(REST_URI)
+										 		   	 .path("asignaturas")
+														 .queryParam("creditos",6)
+														 .queryParam("codigo",34066)
+													   .request(MediaType.APPLICATION_JSON)
+													   .get()
+													   .readEntity(Asignatura[].class);
+			System.out.println("---- Búsqueda compuesta:\n" + a2[0].getNombre());
 
 			// Nueva asignatura:
 			// curl -i -H "Content-Type: application/json" --data '{"créditos":6,"código":"34068","nombre":"Interconexión de Redes","descripción:":"La asignatura aborda..."}' -X POST http://localhost:3000/asignaturas
-			j = new JSONObject();
-			j.put("créditos", new Integer(6));
-			j.put("código", "34068");
-			j.put("nombre", "Interconexión de Redes");
-			j.put("descripción",
-					"La asignatura aborda aspectos avanzados de las redes de comunicaciones IP, como ampliación "
+			Asignatura a3= new Asignatura();
+			a3.setCreditos(6);
+			a3.setId(0);
+			a3.setCodigo("34068");
+			a3.setNombre("Interconexión de Redes");
+			a3.setDescripcion("La asignatura aborda aspectos avanzados de las redes de comunicaciones IP, como ampliación "
 					+ "de los conceptos introducidos en la asignatura obligatoria Redes de Computadores.");
-			Request.Post(base + "asignaturas")
-					.bodyString(j.toJSONString(), ContentType.APPLICATION_JSON).execute().returnContent().asString();
+			client.target(REST_URI)
+			      .path("asignaturas")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.json(a3));
 			System.out.println("---- Nueva asignatura añadida");
-			consultaTodas(base);
+
+			consultaTodas();
 
 			// Modificación de asignatura:
-			j = new JSONObject();
-			j.put("créditos", new Integer(6));
-			j.put("id", new Integer(6));
-			j.put("código", "34068");
-			j.put("nombre", "Interconexión de Redes");
-			j.put("descripción",
-					"La asignatura aborda aspectos avanzados de las redes de comunicaciones IP.");
-			Request.Put(base + "asignaturas/4")
-			    .bodyString(j.toJSONString(), ContentType.APPLICATION_JSON).execute().returnContent().asString();
+			Asignatura a4= new Asignatura();
+			a4.setCreditos(6);
+			a4.setCodigo("34068");
+			a4.setNombre("Interconexión de Redes 2");
+			a4.setDescripcion("La asignatura aborda aspectos avanzados de las redes de comunicaciones IP.");
+			client.target(REST_URI)
+			      .path("asignaturas/4")
+            .request(MediaType.APPLICATION_JSON)
+            .put(Entity.entity(a4, MediaType.APPLICATION_JSON));
 			System.out.println("---- Modificación de asignatura realizada");
-			consultaTodas(base);
+
+			consultaTodas();
 
 			// Borrado de asignatura:
 			// curl -i -X DELETE http://localhost:3000/asignaturas/4
-			s = Request.Delete(base + "asignaturas/4").execute().returnContent().asString();
+			client.target(REST_URI)
+			      .path("asignaturas/4")
+			      .request(MediaType.APPLICATION_JSON)
+			      .delete();
 			System.out.println("---- Borrado de asignatura realizado");
-			consultaTodas(base);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+			consultaTodas();
 	}
 }
