@@ -42,9 +42,9 @@ public class Main {
     // Consulta de todas las asignaturas:
     // curl -i -H "Accept: application/json" -X GET http://localhost:3000/asignaturas/
     Asignatura[] all= client.target(REST_URI)
-    					  			      .path("asignaturas")
-    								        .request(MediaType.APPLICATION_JSON)
-    							          .get()
+                            .path("asignaturas")
+                            .request(MediaType.APPLICATION_JSON)
+                            .get()
                             .readEntity(Asignatura[].class);
     System.out.println("Consulta de todas las asignaturas (códigos y nombres):");
     for (Asignatura a:all) {
@@ -74,13 +74,13 @@ public class Main {
 
     // Búsqueda compuesta:
     Asignatura[] a2= client.target(REST_URI)
-     		   	               .path("asignaturas")
+                           .path("asignaturas")
                            .queryParam("creditos",6)
                            .queryParam("codigo",34066)
                            .request(MediaType.APPLICATION_JSON)
                            .get()
                            .readEntity(Asignatura[].class);
-    System.out.println("Búsqueda compuesta: " + a2[0].getNombre());
+    System.out.println("Consulta con búsqueda compuesta: " + a2[0].getNombre());
 
     // Nueva asignatura:
     // curl -i -H "Content-Type: application/json" --data '{"créditos":6,"código":"34068","nombre":"Interconexión de Redes","descripción:":"La asignatura aborda..."}' -X POST http://localhost:3000/asignaturas
