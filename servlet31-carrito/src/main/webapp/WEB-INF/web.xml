@@ -6,15 +6,7 @@
    metadata-complete="false"
    version="3.1">
 
-  <servlet>
-	<servlet-name>cart</servlet-name>
-	<servlet-class>es.ua.dlsi.dai.CartServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-	<servlet-name>cart</servlet-name>
-	<url-pattern>/search</url-pattern>
-  </servlet-mapping>
+<!-- Para esta aplicación, web.xml no contiene nada, por lo que el fichero es opcional -->
 
 </web-app>
 

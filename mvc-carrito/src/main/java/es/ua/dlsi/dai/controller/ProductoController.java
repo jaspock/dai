@@ -6,10 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
 
 import es.ua.dlsi.dai.dao.ProductoDao;
 import es.ua.dlsi.dai.model.Producto;
 
+@WebServlet(name="productoController",urlPatterns={"/ProductoController"})
 public class ProductoController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static String INSERT_OR_EDIT = "/producto.jsp";
@@ -25,16 +27,16 @@ public class ProductoController extends HttpServlet {
         String forward="";
         String action = request.getParameter("action");
 
-        /* 
+        /*
          * Los servicios web implementados no son REST porque hemos usado formularios de HTML
          * para las peticiones que solo soportan GET y POST: https://stackoverflow.com/a/166501
          */
-        
+
         if (action.equalsIgnoreCase("delete")){
             int productoId = Integer.parseInt(request.getParameter("productoId"));
             dao.deleteProducto(productoId);
             forward = LIST_PRODUCT;
-            request.setAttribute("productos", dao.getAllProductos());    
+            request.setAttribute("productos", dao.getAllProductos());
         } else if (action.equalsIgnoreCase("edit")){
             forward = INSERT_OR_EDIT;
             int productoId = Integer.parseInt(request.getParameter("productoId"));
@@ -54,7 +56,7 @@ public class ProductoController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Producto producto = new Producto();
         producto.setName(request.getParameter("name"));
-        
+
         try {
         	producto.setQuantity(Integer.parseInt(request.getParameter("quantity")));
         } catch (NumberFormatException e) {

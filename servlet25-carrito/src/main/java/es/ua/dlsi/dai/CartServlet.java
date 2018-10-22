@@ -12,14 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 
-
 public class CartServlet extends HttpServlet {
 
-	private static final String DB_DRIVER = "org.hsqldb.jdbc.JDBCDriver";
+    private static final String DB_DRIVER = "org.hsqldb.jdbc.JDBCDriver";
     // Sin 'shutdown=true', HSQLDB no cierra la base de datos al hacer con.close()
-	private static final String DB_CONNECTION = "jdbc:hsqldb:carrito_db;shutdown=true";
-	private static final String DB_USER = "user";
-	private static final String DB_PASSWORD = "";
+    private static final String DB_CONNECTION = "jdbc:hsqldb:carrito_db;shutdown=true";
+    private static final String DB_USER = "user";
+    private static final String DB_PASSWORD = "";
 
     public Connection connectToDatabase() throws ServletException, ClassNotFoundException, SQLException {
         /* Establecemos la conexión con la base de datos y rellenamos la tabla 'productos' con algunos
@@ -46,13 +45,14 @@ public class CartServlet extends HttpServlet {
         return con;
     }
 
-    @Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		response.setContentType("text/html");
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/html");
         response.setCharacterEncoding("utf-8");
-		String q = request.getParameter("q");
-		String output = "";
+        String q = request.getParameter("q");
+        String output = "";
         int error= HttpServletResponse.SC_OK;
 
         Connection con= null;
@@ -83,13 +83,13 @@ public class CartServlet extends HttpServlet {
 
         response.setStatus(error);
         PrintWriter out = response.getWriter();
-		out.println("<!doctype html><html><head><meta charset='utf-8'><title>Carrito de la compra</title></head><body>");
-		out.println(output);
-		out.println("</body></html>");
-	}
+        out.println("<!doctype html><html><head><meta charset='utf-8'><title>Carrito de la compra</title></head><body>");
+        out.println(output);
+        out.println("</body></html>");
+    }
 
 
-	private String selectRecordsFromTable(String q,Connection con) throws SQLException {
+    private String selectRecordsFromTable(String q,Connection con) throws SQLException {
 
         PreparedStatement preparedStatement = null;
         String result = "";
@@ -109,7 +109,7 @@ public class CartServlet extends HttpServlet {
 
         preparedStatement.close();
         return (result.length() > 0 ? result : "<p>¡No se encontraron productos!</p>");
-	}
+    }
 
 }
 

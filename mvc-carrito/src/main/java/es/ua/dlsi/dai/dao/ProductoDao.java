@@ -10,6 +10,8 @@ import java.util.List;
 import es.ua.dlsi.dai.model.Producto;
 import es.ua.dlsi.dai.util.DbUtil;
 
+/* A data access object (DAO) is an object that provides an abstract interface to some type of database. */
+
 public class ProductoDao {
 
     private Connection connection;

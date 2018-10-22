@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.DatabaseMetaData;
 
-// web.xml no es necesario en esta aplicación (servlets 3.0)
 @WebServlet(name="cartServlet",urlPatterns={"/search"})
 public class CartServlet extends HttpServlet {
 
@@ -42,22 +41,20 @@ public class CartServlet extends HttpServlet {
             con.createStatement().executeUpdate("insert into productos (name, quantity) VALUES ('leche',5);");
             con.createStatement().executeUpdate("insert into productos (name, quantity) VALUES ('galletas',2);");
             con.createStatement().executeUpdate("insert into productos (name, quantity) VALUES ('tomates',12);");
-        }
+        }            
         resultSet.close();
 
         return con;
     }
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-      // <<< response.setContentType("text/html");
-      // >>> nuevo código:
-      response.setContentType("application/json");
-      // >>>
-      response.setCharacterEncoding("utf-8");
-      String q = request.getParameter("q");
-      String output = "";
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        response.setCharacterEncoding("utf-8");
+        String q = request.getParameter("q");
+        String output = "";
         int error= HttpServletResponse.SC_OK;
 
         Connection con= null;
@@ -65,48 +62,36 @@ public class CartServlet extends HttpServlet {
             con= connectToDatabase();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-            // <<< output = "<p>¡Error en la base de datos!</p>";
-            // >>>
-            output = "{\"error\": \"error en la base de datos\"}";
-            // >>>
+            error= error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+            output = "<p>¡Error en la base de datos!</p>";
         }
 
         if (con != null) {
             try {
               output = selectRecordsFromTable(q,con);
-              // >>>
-              output = "{\"result\": [ " + selectRecordsFromTable(q,con) + " ] }";
-              // >>>
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage()); 
                 error= error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                // <<< output = "<p>¡Error en la base de datos!</p>";
-                // >>>
-                output = "{\"error\": \"error en la base de datos\"}";
-                // >>>
+                output = "<p>¡Error en la base de datos!</p>";
             }
             try {
                 con.close();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 error= HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                // <<< output = "<p>¡Error en la base de datos!</p>";
-                // >>>
-                output = "{\"error\": \"error en la base de datos\"}";
-                // >>>
+                output = "<p>¡Error en la base de datos!</p>";
             }
         }
 
         response.setStatus(error);
         PrintWriter out = response.getWriter();
-        // <<< out.println("<!doctype html><html><head><meta charset='utf-8'><title>Carrito de la compra</title></head><body>");
+        out.println("<!doctype html><html><head><meta charset='utf-8'><title>Carrito de la compra</title></head><body>");
         out.println(output);
-        // <<< out.println("</body></html>");
-  }
+        out.println("</body></html>");
+    }
 
 
-  private String selectRecordsFromTable(String q,Connection con) throws SQLException {
+    private String selectRecordsFromTable(String q,Connection con) throws SQLException {
 
         PreparedStatement preparedStatement = null;
         String result = "";
@@ -120,22 +105,13 @@ public class CartServlet extends HttpServlet {
         while (rs.next()) {
             String name = rs.getString("name");
             String quantity = rs.getString("quantity");
-            // <<< result += "<p>" + name;
-            // <<< result += ": " + quantity + " unidades</p>";
-            // >>>
-            result += "{\"product\":\"" + name + "\",";
-            result += "\"quantity\":" + quantity + "}";
-            if (!rs.isLast()) {
-                result+=",";
-            }
-            // >>>
+            result += "<p>" + name;
+            result += ": " + quantity + " unidades</p>";
         }
 
         preparedStatement.close();
-        // <<< return (result.length() > 0 ? result : "<p>¡No se encontraron productos!</p>");
-        // >>>
-        return result;
-        // >>>
-  }
+        return (result.length() > 0 ? result : "<p>¡No se encontraron productos!</p>");
+    }
 
 }
+

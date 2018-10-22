@@ -1,13 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.ua.dlsi</groupId>
-  <artifactId>servlet-carrito</artifactId>
+  <artifactId>json-otirrac</artifactId>
   <version>1.0</version>
-  <packaging>war</packaging>  
-  <!-- Jetty incluye por defecto el soporte para JSP -->
+  <packaging>war</packaging>
 
   <properties>
     <jettyVersion>9.3.11.v20160721</jettyVersion>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -18,7 +19,6 @@
       <version>2.3.4</version>
     </dependency>
 
-    <!-- La librería de servlets no viene con JDK -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -37,7 +37,7 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jettyVersion}</version>
         <configuration>
-          <!-- Recarga las clases, pero no las recompila. Para recompilarlas hacer "mvn compile" desde otro terminal. -->    
+          <!-- Recarga las clases, pero no las recompila. Para recompilarlas hacer "mvn compile" desde otro terminal. -->
           <scanIntervalSeconds>2</scanIntervalSeconds>
        </configuration>
       </plugin>
@@ -45,4 +45,3 @@
     </plugins>
   </build>
 </project>
-

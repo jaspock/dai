@@ -9,15 +9,24 @@
   </head>
 <body>
     <form method="POST" action='ProductoController' name="frmAddProduct">
-        Identificador : <input type="text" readonly="readonly" name="productoid"
-            value="<c:out value="${producto.productoid}" />" /> <br /> 
-        Nombre : <input
-            type="text" name="name"
-            value="<c:out value="${producto.name}" />" /> <br /> 
-        Cantidad : <input
-            type="text" name="quantity"
-            value="<c:out value="${producto.quantity}" />" /> <br /> 
-        <input type="submit" value="Submit" />
+        <p>
+          <label for="identificador">Identificador:</label>
+          <input type="text" readonly="readonly" name="productoid" id="identificador"
+            value="<c:out value="${producto.productoid}" />" />
+        </p>
+        <p>
+          <label for="nombre">Nombre:</label>
+          <input type="text" name="name" id="nombre"
+            value="<c:out value="${producto.name}" />" />
+        </p>
+        <p>
+          <label for="cantidad">Cantidad:</label>
+          <input type="text" name="quantity" id="cantidad"
+            value="<c:out value="${producto.quantity}" />" />
+        </p>
+        <p>
+          <button type="submit">Enviar</button>
+        </p>
     </form>
 </body>
 </html>

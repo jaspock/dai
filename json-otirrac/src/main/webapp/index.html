@@ -7,18 +7,21 @@
 <body>
   <h2>Búsqueda de productos</h2>
 
-    <form id="formulario">
-      <label>Producto:</label>
-      <input type="text" id="q" placeholder="pon aquí el nombre del producto" autofocus required>
+  <form id="formulario">
+    <p>
+      <label for="nombre">Producto:</label>
+      <input type="text" id="nombre" name="q" placeholder="pon aquí el nombre del producto" autofocus required>
       <button type="submit" id="search">Busca</button>
-    </form>
+    </p>
+  </form>
 
-    <div id="results"></div>
+
+  <div id="results"></div>
 
 <script>
 function doRequest (e) {
   e.preventDefault(); // evita la acción por defecto (enviar el formulario)
-  fetch('search?q='+document.querySelector("#q").value)
+  fetch('search?q='+document.querySelector("#nombre").value)
     .then(function(response) {
       if (!response.ok) {
         throw Error(response.statusText);
@@ -31,13 +34,18 @@ function doRequest (e) {
         output= responseAsJson.error;
       } else {
         output= "<ul>";
-        for (var i=0; i < responseAsJson.result.length; i++) {
-          output+= "<li>"+responseAsJson.result[i].product+":"+responseAsJson.result[i].quantity+"</li>";
+        if (responseAsJson.result.length==0) {
+          output+="<li>¡No existe el producto!</li>";
+        }
+        else {
+          for (var i=0; i < responseAsJson.result.length; i++) {
+            output+= "<li>"+responseAsJson.result[i].product+":"+responseAsJson.result[i].quantity+"</li>";
+          }
         }
         output+="</ul>";
       }
       document.querySelector("#results").innerHTML= output;
-      document.querySelector("#q").value= "";
+      document.querySelector("#nombre").value= "";
     })
     .catch(function(error) {
       console.log('Ha habido un problema: \n', error);

@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Título</title>
+	<title>Carrito con MVC</title>
 </head>
 <body>
 	<jsp:forward page="/ProductoController?action=listProducto" />

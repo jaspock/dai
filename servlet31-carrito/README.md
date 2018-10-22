@@ -1,5 +1,5 @@
 
-# Ejemplo de servlet sencillo
+# Ejemplo de servlet (versión 3.1) sencillo
 
 Haz
 
